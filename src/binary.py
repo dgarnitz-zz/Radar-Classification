@@ -1,1 +1,0 @@
-print("machine learning p2")
