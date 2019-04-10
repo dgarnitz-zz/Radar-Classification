@@ -5,9 +5,12 @@ from sklearn.linear_model import SGDClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import cross_val_predict, GridSearchCV
 from sklearn.metrics import precision_score, recall_score, f1_score, confusion_matrix, precision_recall_curve, roc_curve
+
 from sklearn import preprocessing
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import PolynomialFeatures
+
 from sklearn.pipeline import Pipeline
+
 
 #load data
 X_raw_data = pd.read_csv('../data/binary/X.csv', header=None)
@@ -34,22 +37,30 @@ shuffle_index = np.random.permutation(64)
 x_train, y_train = X_training[shuffle_index], y_train[shuffle_index]
 
 #initialize the model - stochasic gradient descent classifier
-sgd_clf = SGDClassifier(random_state=45, max_iter=1000, tol=1e-3)
+sgd_clf = SGDClassifier(random_state=40)
 
 #standardize the data
-scaler = StandardScaler()
-scaler.fit(x_train)  # Don't cheat - fit only on training data
-x_train = scaler.transform(x_train)
-X_testing = scaler.transform(X_testing)
+scaler = preprocessing.StandardScaler().fit(x_train) 
+
+ #create pipeline & grid
+pipeline = Pipeline([('scaler', scaler), 
+        ('model', sgd_clf)])
+
+grid = [{'model__tol': [0.1, 1e-3, 1e-4, 1e-5],
+        'model__max_iter': [500, 1000, 10000]}] 
+
+#Perform Grid Search and Cross Validation
+clf = GridSearchCV(pipeline, param_grid = grid, cv=5, refit = True)
 
 #train the model
-sgd_clf.fit(x_train, y_train.ravel())
+clf.fit(x_train, y_train.ravel())
+#clf.refit  
 
 #cross validation - use cross_val_predict to give the actual values
-y_train_prediction = cross_val_predict(sgd_clf, x_train, y_train.ravel(), cv=5)
+y_train_prediction = cross_val_predict(clf, x_train, y_train.ravel(), cv=5)
 
 #caclulate the score for each training instance, then use it to plot Precision-Recall Curve and Receiver Operating Characteristic
-y_scores = cross_val_predict(sgd_clf, x_train, y_train.ravel(), cv=5, method="decision_function")
+y_scores = cross_val_predict(clf, x_train, y_train.ravel(), cv=5, method="decision_function")
 
 #performance evaluation 
 print(confusion_matrix(y_train, y_train_prediction))
