@@ -75,7 +75,7 @@ print(f1_score(y_train, y_train_prediction))
 #results visualization - Precision-Recall Curve
 precisions, recalls, thresholds = precision_recall_curve(y_training, y_scores)
 helpers.plot_precision_recall_curve(precisions, recalls)
-helpers.plot_precision_recall_vs__threshold(precisions, recalls, thresholds)
+helpers.plot_precision_recall_vs_threshold(precisions, recalls, thresholds)
 
 #results visualization - Receiver Operating Characteristic
 fpr, tpr, thresholds = roc_curve(y_training, y_scores)

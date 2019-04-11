@@ -13,6 +13,13 @@ from sklearn.pipeline import Pipeline
 X_raw_data = pd.read_csv('../data/binary/X.csv', header=None)
 y_raw_data = pd.read_csv('../data/binary/y.csv', header=None)
 
+X_mean = X_raw_data.loc[:,:255] # this takes only the means
+
+#visualize the data
+helpers.visualizeOneRowOfData(X_raw_data)
+helpers.visualizeOneRowOfData(X_mean)
+helpers.visualizeStandardDeviation(X_raw_data)
+
 #explore the data
 helpers.checkDataForNullAndType(X_raw_data, y_raw_data)
 
@@ -61,7 +68,7 @@ print(f1_score(y_train, y_train_prediction))
 #results visualization - Precision-Recall Curve
 precisions, recalls, thresholds = precision_recall_curve(y_training, y_scores)
 helpers.plot_precision_recall_curve(precisions, recalls)
-helpers.plot_precision_recall_vs__threshold(precisions, recalls, thresholds)
+helpers.plot_precision_recall_vs_threshold(precisions, recalls, thresholds)
 
 #results visualization - Receiver Operating Characteristic
 fpr, tpr, thresholds = roc_curve(y_training, y_scores)
