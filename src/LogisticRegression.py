@@ -18,10 +18,13 @@ y_raw_data = pd.read_csv('../data/binary/y.csv', header=None)
 if(not X_raw_data.isnull().any().any() and not y_raw_data.isnull().any().any()):
     print("There are no nul values in this dataset")
 
+#check for string - every column appears to be of type 'float64', there are no strings
+#print(X_raw_data.dtypes)
+#print(X_raw_data.select_dtypes(include=[object]))
+
 #load into numpy array
 X = X_raw_data.values
 y = y_raw_data.values 
-
 
 #remove the training set 
 X_training, X_testing, y_training, y_testing = train_test_split(X, y, test_size = 0.2, random_state = 78)

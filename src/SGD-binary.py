@@ -9,18 +9,33 @@ from sklearn import preprocessing
 from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import Pipeline
 
+#method for exploring the data
+def checkDataForNullAndType(X_raw_data, y_raw_data):
+    
+    #check for null
+    if(not X_raw_data.isnull().any().any() and not y_raw_data.isnull().any().any()):
+        print("There are no null values in this dataset")
+    else:
+        print("There are null values in this dataset")
+
+    #check for string - every column appears to be of type 'float64', there are no strings
+    print(X_raw_data.dtypes)
+    print(X_raw_data.select_dtypes(include=[object]))
+
+
+#check for string - every column appears to be of type 'float64', there are no strings
+#print(X_raw_data.dtypes)
+#print(X_raw_data.select_dtypes(include=[object]))
+
 #load data
 X_raw_data = pd.read_csv('../data/binary/X.csv', header=None)
 y_raw_data = pd.read_csv('../data/binary/y.csv', header=None)
 
-#check for null
-if(not X_raw_data.isnull().any().any() and not y_raw_data.isnull().any().any()):
-    print("There are no nul values in this dataset")
+checkDataForNullAndType(X_raw_data, y_raw_data)
 
 #load into numpy array
 X = X_raw_data.values
 y = y_raw_data.values 
-
 
 #remove the training set 
 X_training, X_testing, y_training, y_testing = train_test_split(X, y, test_size = 0.2, random_state = 78)
@@ -68,3 +83,4 @@ helpers.plot_precision_recall_vs__threshold(precisions, recalls, thresholds)
 #results visualization - Receiver Operating Characteristic
 fpr, tpr, thresholds = roc_curve(y_training, y_scores)
 helpers.plot_roc_curve(fpr, tpr)
+
