@@ -9,29 +9,12 @@ from sklearn import preprocessing
 from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import Pipeline
 
-#method for exploring the data
-def checkDataForNullAndType(X_raw_data, y_raw_data):
-    
-    #check for null
-    if(not X_raw_data.isnull().any().any() and not y_raw_data.isnull().any().any()):
-        print("There are no null values in this dataset")
-    else:
-        print("There are null values in this dataset")
-
-    #check for string - every column appears to be of type 'float64', there are no strings
-    print(X_raw_data.dtypes)
-    print(X_raw_data.select_dtypes(include=[object]))
-
-
-#check for string - every column appears to be of type 'float64', there are no strings
-#print(X_raw_data.dtypes)
-#print(X_raw_data.select_dtypes(include=[object]))
-
 #load data
 X_raw_data = pd.read_csv('../data/binary/X.csv', header=None)
 y_raw_data = pd.read_csv('../data/binary/y.csv', header=None)
 
-checkDataForNullAndType(X_raw_data, y_raw_data)
+#explore the data
+helpers.checkDataForNullAndType(X_raw_data, y_raw_data)
 
 #load into numpy array
 X = X_raw_data.values
