@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 import helpers
-from sklearn.linear_model import LogisticRegression
+from sklearn.svm import SVC
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import cross_val_predict, GridSearchCV
 from sklearn.metrics import precision_score, recall_score, f1_score, confusion_matrix, precision_recall_curve, roc_curve
@@ -13,16 +13,6 @@ from sklearn.pipeline import Pipeline
 #load data
 X_raw_data = pd.read_csv('../data/binary/X.csv', header=None)
 y_raw_data = pd.read_csv('../data/binary/y.csv', header=None)
-
-X_mean = X_raw_data.loc[:,:255] # this takes only the means
-
-#visualize the data
-helpers.visualizeOneRowOfData(X_raw_data)
-helpers.visualizeOneRowOfData(X_mean)
-helpers.visualizeStandardDeviation(X_raw_data)
-
-#explore the data
-helpers.checkDataForNullAndType(X_raw_data, y_raw_data)
 
 #load into numpy array
 X = X_raw_data.values
@@ -40,18 +30,17 @@ shuffle_index = np.random.permutation(64)
 x_train, y_train = X_training[shuffle_index], y_train[shuffle_index]
 
 #initialize the model - stochasic gradient descent classifier
-log_reg = LogisticRegression(solver='liblinear') #good choice for small datasets
+svc = SVC(decision_function_shape = 'ovo') 
 
 #standardize the data
 scaler = preprocessing.StandardScaler().fit(x_train) 
 
  #create pipeline & grid
 pipeline = Pipeline([('scaler', scaler), 
-        ('model', log_reg)])
+        ('model', svc)])
 
-grid = [{'model__penalty': ['l1', 'l2'],
-        'model__tol': [1e-3, 1e-4, 1e-5],
-        'model__max_iter': [100, 500, 1000]}] 
+grid = [{'model__kernel': ['linear', 'rbf', 'sigmoid'],
+        'model__tol': [1e-3, 1e-4, 1e-5]}] 
 
 #Perform Grid Search and Cross Validation
 clf = GridSearchCV(pipeline, param_grid = grid, cv=5, refit = True)

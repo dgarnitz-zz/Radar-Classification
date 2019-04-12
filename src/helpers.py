@@ -61,14 +61,3 @@ def visualizeStandardDeviation(X):
     plt.title("Standard Deviation of Each Row")
     plt.show()
 
-#compare standard deviation of the classes --> this does not work
-# def compareSD(X, y): 
-#     yEquals0 = []
-#     yEquals1 = []
-#     for i in X.columns:
-#         if y.loc[i,0] == 0:
-            
-#         array.append(X.loc[:, i].std()) 
-#     print("Porco Dio : " )
-#     plt.plot(X.columns, array)
-#     plt.show()
