@@ -15,20 +15,24 @@ y_raw_data = pd.read_csv('../data/binary/y.csv', header=None)
 
 X_mean = X_raw_data.loc[:,:255] # this takes only the means
 
-#visualize the data
-helpers.visualizeOneRowOfData(X_raw_data)
-helpers.visualizeOneRowOfData(X_mean)
-helpers.visualizeStandardDeviation(X_raw_data)
-
 #explore the data
 helpers.checkDataForNullAndType(X_raw_data, y_raw_data)
 
-#load into numpy array
-X = X_raw_data.values
-y = y_raw_data.values 
+#remove the training set
+X_training, X_testing, y_training, y_testing = train_test_split(X_raw_data, y_raw_data, test_size = 0.2, random_state = 78)
 
-#remove the training set 
-X_training, X_testing, y_training, y_testing = train_test_split(X, y, test_size = 0.2, random_state = 78)
+#visualize the data
+helpers.visualizeOneRowOfData(X_training)
+helpers.visualizeOneRowOfData(X_mean)
+helpers.visualizeStandardDeviation(X_training)
+helpers.visualizeAllRowsOfData(X_raw_data)
+
+#heatmap
+# helpers.correlationMatrix(X_training)
+
+#load into numpy array
+X = X_training.values
+y = y_training.values
 
 #set classifcation
 y_train = (y_training == 0)
@@ -56,7 +60,7 @@ y_train_prediction = cross_val_predict(sgd_clf, x_train, y_train.ravel(), cv=5)
 #caclulate the score for each training instance, then use it to plot Precision-Recall Curve and Receiver Operating Characteristic
 y_scores = cross_val_predict(sgd_clf, x_train, y_train.ravel(), cv=5, method="decision_function")
 
-#performance evaluation 
+#performance evaluation
 print(confusion_matrix(y_train, y_train_prediction))
 print("Precision is: ")                                 #True Positive / (True Positive + False Positive)
 print(precision_score(y_train, y_train_prediction))
@@ -73,4 +77,3 @@ helpers.plot_precision_recall_vs_threshold(precisions, recalls, thresholds)
 #results visualization - Receiver Operating Characteristic
 fpr, tpr, thresholds = roc_curve(y_training, y_scores)
 helpers.plot_roc_curve(fpr, tpr)
-
