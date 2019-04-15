@@ -53,8 +53,8 @@ def visualizeOneRowOfData(X):
 
 #visualize all rows of data
 def visualizeAllRowsOfData(X):
-    for i in range(80):
-        plt.plot(X.columns, X.loc[i,:])
+    for index, row in X.iterrows():
+        plt.plot(X.columns, X.loc[index,:])
 
     plt.title("All Data Points Visualized")
     plt.xlabel('Feature Number')
