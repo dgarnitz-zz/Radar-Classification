@@ -13,64 +13,59 @@ from sklearn.pipeline import Pipeline
 X_raw_data = pd.read_csv('../data/binary/X.csv', header=None)
 y_raw_data = pd.read_csv('../data/binary/y.csv', header=None)
 
-X_mean = X_raw_data.loc[:,:255] # this takes only the means
-
-#visualize the data
-helpers.visualizeOneRowOfData(X_raw_data)
-helpers.visualizeOneRowOfData(X_mean)
-helpers.visualizeStandardDeviation(X_raw_data)
+X_means = X_raw_data.loc[:,:255] # this takes only the means
 
 #explore the data
 helpers.checkDataForNullAndType(X_raw_data, y_raw_data)
 
-#load into numpy array
-X = X_raw_data.values
-y = y_raw_data.values 
+#remove the training set from whole data set
+X_training, X_testing, y_training, y_testing = train_test_split(X_raw_data, y_raw_data, test_size = 0.2, random_state = 78)
 
-#remove the training set 
-X_training, X_testing, y_training, y_testing = train_test_split(X, y, test_size = 0.2, random_state = 78)
+#create a training and testing dataset from the mean values
+X_training_means, X_testing_means, y_training_means, y_testing_means = train_test_split(X_means, y_raw_data, test_size = 0.2, random_state = 78)
 
-#set classifcation
-y_train = (y_training == 0)
-y_test = (y_testing == 0)
+#visualize the data
+helpers.visualizeOneRowOfData(X_training)
+helpers.visualizeOneRowOfData(X_training_means)
+helpers.visualizeStandardDeviation(X_training)
+helpers.visualizeAllRowsOfData(X_training)
+helpers.visualizeAllRowsOfData(X_training_means)
 
-#shuffle testing - use the data size, which is 64 when 20% of the data is left for testing
-shuffle_index = np.random.permutation(64)
-x_train, y_train = X_training[shuffle_index], y_train[shuffle_index]
+#heatmap
+# helpers.correlationMatrix(X_training)
 
 #initialize the model - stochasic gradient descent classifier
 sgd_clf = SGDClassifier(random_state=45, max_iter=1000, tol=1e-3)
 
 #standardize the data
 scaler = StandardScaler()
-scaler.fit(x_train)  # Don't cheat - fit only on training data
-x_train = scaler.transform(x_train)
+scaler.fit(X_training)  # Don't cheat - fit only on training data
+x_train = scaler.transform(X_training)
 X_testing = scaler.transform(X_testing)
 
 #train the model
-sgd_clf.fit(x_train, y_train.ravel())
+sgd_clf.fit(x_train, y_training)
 
 #cross validation - use cross_val_predict to give the actual values
-y_train_prediction = cross_val_predict(sgd_clf, x_train, y_train.ravel(), cv=5)
+y_train_prediction = cross_val_predict(sgd_clf, x_train, y_training, cv=5)
 
 #caclulate the score for each training instance, then use it to plot Precision-Recall Curve and Receiver Operating Characteristic
-y_scores = cross_val_predict(sgd_clf, x_train, y_train.ravel(), cv=5, method="decision_function")
+y_scores = cross_val_predict(sgd_clf, x_train, y_training, cv=5, method="decision_function")
 
-#performance evaluation 
-print(confusion_matrix(y_train, y_train_prediction))
+#performance evaluation
+print(confusion_matrix(y_training, y_train_prediction))
 print("Precision is: ")                                 #True Positive / (True Positive + False Positive)
-print(precision_score(y_train, y_train_prediction))
+print(precision_score(y_training, y_train_prediction))
 print("Recall is: ")                                    #True Positive / (True Positive + False Negative)
-print(recall_score(y_train, y_train_prediction))
+print(recall_score(y_training, y_train_prediction))
 print("F1 Score is: ")                                  #useful for comparing two classifiers
-print(f1_score(y_train, y_train_prediction))
+print(f1_score(y_training, y_train_prediction))
 
-#results visualization - Precision-Recall Curve
+#results visualization - Precision-Recall Curve - training data
 precisions, recalls, thresholds = precision_recall_curve(y_training, y_scores)
 helpers.plot_precision_recall_curve(precisions, recalls)
 helpers.plot_precision_recall_vs_threshold(precisions, recalls, thresholds)
 
-#results visualization - Receiver Operating Characteristic
+#results visualization - Receiver Operating Characteristic - training data
 fpr, tpr, thresholds = roc_curve(y_training, y_scores)
 helpers.plot_roc_curve(fpr, tpr)
-
