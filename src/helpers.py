@@ -78,14 +78,3 @@ def correlationMatrix(dataframe):
     sns.heatmap(corr, annot=True)
 
 
-#compare standard deviation of the classes --> this does not work
-# def compareSD(X, y):
-#     yEquals0 = []
-#     yEquals1 = []
-#     for i in X.columns:
-#         if y.loc[i,0] == 0:
-
-#         array.append(X.loc[:, i].std())
-#     print("Porco Dio : " )
-#     plt.plot(X.columns, array)
-#     plt.show()
