@@ -16,8 +16,8 @@ def checkDataForNullAndType(X_raw_data, y_raw_data):
 
 #from "Hands-on Machine Learning with Scikit-Learn & TensorFlow" by Aurelien Geron, page 91
 def plot_precision_recall_vs_threshold(precisions, recalls, thresholds):
-    plt.plot(thresholds, precisions[:-1], "b--", label="Precision")
-    plt.plot(thresholds, recalls[:-1], "g--", label="Recall")
+    plt.plot(thresholds, precisions[:-1], "b--", label="Precision", linewidth=3.0)
+    plt.plot(thresholds, recalls[:-1], "g--", label="Recall", linewidth=3.0)
     plt.xlabel("Threshold")
     plt.legend(loc="center left")
     plt.ylim([0, 1])
@@ -26,7 +26,7 @@ def plot_precision_recall_vs_threshold(precisions, recalls, thresholds):
 
 #from "Hands-on Machine Learning with Scikit-Learn & TensorFlow" by Aurelien Geron, page 93
 def plot_roc_curve(fpr, tpr, label=None):
-    plt.plot(fpr, tpr, linewidth=2, label=label)
+    plt.plot(fpr, tpr, linewidth=5, label=label)
     plt.plot([0, 1], [0, 1], 'k--')
     plt.axis([0, 1, 0, 1])
     plt.xlabel('False Positive Rate')
@@ -36,7 +36,7 @@ def plot_roc_curve(fpr, tpr, label=None):
 
 #precision recall curve
 def plot_precision_recall_curve(precisions, recalls):
-    plt.plot(recalls[:-1], precisions[:-1], "b--")
+    plt.plot(recalls[:-1], precisions[:-1], "b--", linewidth=3.0)
     plt.xlabel('Recall')
     plt.ylabel('Precision')
     plt.ylim([0, 1])
@@ -75,9 +75,5 @@ def visualizeStandardDeviation(X):
 #heatmap
 def correlationMatrix(dataframe):
     corr = dataframe.corr()
-    print(corr)
     sns.heatmap(corr)
-    print("Heatmap rendered")
     plt.show()
-
-

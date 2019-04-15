@@ -33,6 +33,15 @@ helpers.visualizeAllRowsOfData(X_training_means)
 
 #heatmap
 helpers.correlationMatrix(X_means)
+#the heatmap has repeating patterns. some of this has to do with the fact that
+#there are 4 channels, with each channel having 64 components. The 256 mean
+#values can therefore be divided into 4 groups of 64. Thus in each of the 4 large
+#boxes seen in the heatmap, we see similar patterns, although not identical.
+#An analysis of a row of visualized data shows that the values are related,
+#that the values of many inputs are related. For example, X15 is close to the
+#values of X14 and X16. An analysis of a row of visualized data also reveals
+#that there is a visual pattern that repeats itself every 64 Xs, in line with
+#the division of the channels
 
 #initialize the model - stochasic gradient descent classifier
 sgd_clf = SGDClassifier(random_state=45, max_iter=1000, tol=1e-3)
