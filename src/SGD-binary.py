@@ -13,16 +13,16 @@ from sklearn.pipeline import Pipeline
 X_raw_data = pd.read_csv('../data/binary/X.csv', header=None)
 y_raw_data = pd.read_csv('../data/binary/y.csv', header=None)
 
-X_means = X_raw_data.loc[:,:255] # this takes only the means
+X_means = X_raw_data.iloc[:,:256] # this takes only the means
 
 #explore the data
-helpers.checkDataForNullAndType(X_raw_data, y_raw_data)
+#helpers.checkDataForNullAndType(X_raw_data, y_raw_data)
 
 #remove the training set from whole data set
-X_training, X_testing, y_training, y_testing = train_test_split(X_raw_data, y_raw_data, test_size = 0.2, random_state = 78)
+X_training, X_testing, y_training, y_testing = train_test_split(X_raw_data, y_raw_data, test_size = 0.2, random_state = 78, stratify=y_raw_data)
 
 #create a training and testing dataset from the mean values
-X_training_means, X_testing_means, y_training_means, y_testing_means = train_test_split(X_means, y_raw_data, test_size = 0.2, random_state = 78)
+X_training_means, X_testing_means, y_training_means, y_testing_means = train_test_split(X_means, y_raw_data, test_size = 0.2, random_state = 78, stratify=y_raw_data)
 
 #visualize the data
 helpers.visualizeOneRowOfData(X_training)
@@ -32,7 +32,7 @@ helpers.visualizeAllRowsOfData(X_training)
 helpers.visualizeAllRowsOfData(X_training_means)
 
 #heatmap
-# helpers.correlationMatrix(X_training)
+helpers.correlationMatrix(X_means)
 
 #initialize the model - stochasic gradient descent classifier
 sgd_clf = SGDClassifier(random_state=45, max_iter=1000, tol=1e-3)

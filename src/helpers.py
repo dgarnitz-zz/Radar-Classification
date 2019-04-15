@@ -75,6 +75,9 @@ def visualizeStandardDeviation(X):
 #heatmap
 def correlationMatrix(dataframe):
     corr = dataframe.corr()
-    sns.heatmap(corr, annot=True)
+    print(corr)
+    sns.heatmap(corr)
+    print("Heatmap rendered")
+    plt.show()
 
 

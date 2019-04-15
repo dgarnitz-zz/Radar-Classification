@@ -20,7 +20,7 @@ X_mean = X_raw_data.loc[:,:255] # this takes only the means
 #helpers.checkDataForNullAndType(X_raw_data, y_raw_data)
 
 #remove the training set
-X_training, X_testing, y_training, y_testing = train_test_split(X_raw_data, y_raw_data, test_size = 0.2, random_state = 78)
+X_training, X_testing, y_training, y_testing = train_test_split(X_raw_data, y_raw_data, test_size = 0.2, random_state = 78, stratify=y_raw_data)
 
 #visualize the data
 helpers.visualizeOneRowOfData(X_training)
