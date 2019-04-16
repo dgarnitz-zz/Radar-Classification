@@ -34,7 +34,7 @@ scaler = preprocessing.StandardScaler().fit(X_training)
 pipeline = Pipeline([('scaler', scaler),
         ('model', mlp)])
 
-grid = [{'model__hidden_layer_sizes': [(80,), (80,80,)],
+grid = [{'model__hidden_layer_sizes': [(500,)],
         'model__max_iter': [1000]}]
 
 #Perform Grid Search and Cross Validation
@@ -44,26 +44,20 @@ clf = GridSearchCV(pipeline, param_grid = grid, cv=5, refit = True)
 clf.fit(X_training, y_training)
 
 #cross validation - use cross_val_predict to give the actual values
-y_train_prediction = cross_val_predict(clf, X_training, y_training, cv=5)
+y_train_prediction = cross_val_predict(clf, X_testing, y_testing, cv=5)
 
 #confusion matrix and visualization
-confusion_matrix = confusion_matrix(y_training, y_train_prediction)
+confusion_matrix = confusion_matrix(y_testing, y_train_prediction)
 print(confusion_matrix)
 xlabels=["air", "book", "hand", "knife", "plastic case"]
 ylabels=["air", "book", "hand", "knife", "plastic case"]
 helpers.confusionMatrix(confusion_matrix, xlabels, ylabels)
 
-#performance evaluation of training data - per class
+#performance evaluation of training data - overall
+#micro is better if there is a class imbalance
 print("Precision is: ")                                 #True Positive / (True Positive + False Positive)
-print(precision_score(y_training, y_train_prediction, average=None))
+print(precision_score(y_testing, y_train_prediction, average='micro'))
 print("Recall is: ")                                    #True Positive / (True Positive + False Negative)
-print(recall_score(y_training, y_train_prediction, average=None))
+print(recall_score(y_testing, y_train_prediction, average='micro'))
 print("F1 Score is: ")                                  #useful for comparing two classifiers
-print(f1_score(y_training, y_train_prediction, average=None))
-
-#performance evaluation of training data - overall                                 #True Positive / (True Positive + False Positive)
-print(precision_score(y_training, y_train_prediction, average='micro'))
-print("Recall is: ")                                    #True Positive / (True Positive + False Negative)
-print(recall_score(y_training, y_train_prediction, average='micro'))
-print("F1 Score is: ")                                  #useful for comparing two classifiers
-print(f1_score(y_training, y_train_prediction, average='micro'))
+print(f1_score(y_testing, y_train_prediction, average='micro'))

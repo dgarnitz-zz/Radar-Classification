@@ -1,0 +1,6 @@
+best parameters - SVM
+{'model__C': 0.1,
+'model__decision_function_shape': 'ovo',
+'model__degree': 1,
+'model__kernel': 'linear',
+'model__tol': 0.001}

@@ -19,7 +19,7 @@ X_training, X_testing, y_training, y_testing = train_test_split(X_raw_data, y_ra
 
 #initialize the model - Support vector classification
 #shape of one-versus-one compares two classes directly, better for binary
-svc = SVC(decision_function_shape = 'ovo')
+svc = SVC()
 
 #standardize the data
 scaler = preprocessing.StandardScaler().fit(X_training)
@@ -28,8 +28,11 @@ scaler = preprocessing.StandardScaler().fit(X_training)
 pipeline = Pipeline([('scaler', scaler),
         ('model', svc)])
 
-grid = [{'model__kernel': ['linear'],
-        'model__tol': [1e-3, 1e-4, 1e-5]}]
+grid = [{ 'model__C': [0.1, 0.5, 1],
+        'model__kernel': ['linear', 'poly'],
+        'model__degree': [1, 2, 3],
+        'model__tol': [1e-3, 1e-4, 1e-5],
+        'model__decision_function_shape': ['ovo', 'ovr']}]
 
 #Perform Grid Search and Cross Validation
 clf = GridSearchCV(pipeline, param_grid = grid, cv=5, refit = True)
@@ -38,20 +41,32 @@ clf = GridSearchCV(pipeline, param_grid = grid, cv=5, refit = True)
 clf.fit(X_training, y_training)
 
 #cross validation - use cross_val_predict to give the actual values
-y_train_prediction = cross_val_predict(clf, X_training, y_training, cv=5)
+y_train_prediction = cross_val_predict(clf, X_testing, y_testing, cv=5)
 
 #caclulate the score for each training instance, then use it to plot Precision-Recall Curve and Receiver Operating Characteristic
-y_scores = cross_val_predict(clf, X_training, y_training, cv=5, method="decision_function")
+y_scores = cross_val_predict(clf, X_testing, y_testing, cv=5, method="decision_function")
+
+#print the best parameters
+# print("best parameters:")
+# print(clf.get_params())
+
+#cross validation results
+# print("cross validation results:")
+# print(clf.cv_results_)
+
+#best parameters
+# print("best parameters")
+# print(clf.best_params_)
 
 #performance evaluation
-confusion_matrix = confusion_matrix(y_training, y_train_prediction)
+confusion_matrix = confusion_matrix(y_testing, y_train_prediction)
 print(confusion_matrix)
 print("Precision is: ")                                 #True Positive / (True Positive + False Positive)
-print(precision_score(y_training, y_train_prediction))
+print(precision_score(y_testing, y_train_prediction))
 print("Recall is: ")                                    #True Positive / (True Positive + False Negative)
-print(recall_score(y_training, y_train_prediction))
+print(recall_score(y_testing, y_train_prediction))
 print("F1 Score is: ")                                  #useful for comparing two classifiers
-print(f1_score(y_training, y_train_prediction))
+print(f1_score(y_testing, y_train_prediction))
 
 #visualize confusion_matrix
 xlabels=["book", "plastic case"]
@@ -59,10 +74,10 @@ ylabels=["book", "plastic case"]
 helpers.confusionMatrix(confusion_matrix, xlabels, ylabels)
 
 #results visualization - Precision-Recall Curve
-precisions, recalls, thresholds = precision_recall_curve(y_training, y_scores)
+precisions, recalls, thresholds = precision_recall_curve(y_testing, y_scores)
 helpers.plot_precision_recall_curve(precisions, recalls)
 helpers.plot_precision_recall_vs_threshold(precisions, recalls, thresholds)
 
 #results visualization - Receiver Operating Characteristic
-fpr, tpr, thresholds = roc_curve(y_training, y_scores)
+fpr, tpr, thresholds = roc_curve(y_testing, y_scores)
 helpers.plot_roc_curve(fpr, tpr)

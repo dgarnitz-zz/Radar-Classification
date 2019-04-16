@@ -57,40 +57,33 @@ clf = GridSearchCV(pipeline, param_grid = grid, cv=5, refit = True)
 clf.fit(X_training, y_training)
 
 #cross validation - use cross_val_predict to give the actual values
-y_train_prediction = cross_val_predict(clf, X_training, y_training, cv=5)
+y_train_prediction = cross_val_predict(clf, X_testing, y_testing, cv=5)
 
 #calculate the score for each training instance, then use it to plot Precision-Recall Curve and Receiver Operating Characteristic
-y_scores = cross_val_predict(clf, X_training, y_training, cv=5, method="decision_function")
+y_scores = cross_val_predict(clf, X_testing, y_testing, cv=5, method="decision_function")
 
 #confusion matrix and visualization
-confusion_matrix = confusion_matrix(y_training, y_train_prediction)
+confusion_matrix = confusion_matrix(y_testing, y_train_prediction)
 print(confusion_matrix)
 xlabels=["air", "book", "hand", "knife", "plastic case"]
 ylabels=["air", "book", "hand", "knife", "plastic case"]
 helpers.confusionMatrix(confusion_matrix, xlabels, ylabels)
 
-#performance evaluation of training data - per class
-print("Precision is: ")                                 #True Positive / (True Positive + False Positive)
-print(precision_score(y_training, y_train_prediction, average=None))
-print("Recall is: ")                                    #True Positive / (True Positive + False Negative)
-print(recall_score(y_training, y_train_prediction, average=None))
-print("F1 Score is: ")                                  #useful for comparing two classifiers
-print(f1_score(y_training, y_train_prediction, average=None))
-
 #performance evaluation of training data - overall
+#micro is better if there is a class imbalance
 print("Precision is: ")                                 #True Positive / (True Positive + False Positive)
-print(precision_score(y_training, y_train_prediction, average='micro'))
+print(precision_score(y_testing, y_train_prediction, average='micro'))
 print("Recall is: ")                                    #True Positive / (True Positive + False Negative)
-print(recall_score(y_training, y_train_prediction, average='micro'))
+print(recall_score(y_testing, y_train_prediction, average='micro'))
 print("F1 Score is: ")                                  #useful for comparing two classifiers
-print(f1_score(y_training, y_train_prediction, average='micro'))
+print(f1_score(y_testing, y_train_prediction, average='micro'))
 
 #results visualization - Precision-Recall Curve - training data
 #need one hot encoding for these to work, multiclass is not supported --> label_binarize
-#precisions, recalls, thresholds = precision_recall_curve(y_training, y_scores)
+#precisions, recalls, thresholds = precision_recall_curve(y_testing, y_scores)
 # helpers.plot_precision_recall_curve(precisions, recalls)
 # helpers.plot_precision_recall_vs_threshold(precisions, recalls, thresholds)
 
 #results visualization - Receiver Operating Characteristic - training data
-# fpr, tpr, thresholds = roc_curve(y_training, y_scores)
+# fpr, tpr, thresholds = roc_curve(y_testing, y_scores)
 # helpers.plot_roc_curve(fpr, tpr)
