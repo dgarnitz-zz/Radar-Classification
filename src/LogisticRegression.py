@@ -34,7 +34,7 @@ log_reg = LogisticRegression(solver='liblinear') #good choice for small datasets
 #standardize the data
 scaler = preprocessing.StandardScaler().fit(X_training)
 
- #create pipeline & grid
+#create pipeline & grid
 pipeline = Pipeline([('scaler', scaler),
         ('model', log_reg)])
 

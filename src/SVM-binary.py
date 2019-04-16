@@ -14,21 +14,22 @@ from sklearn.pipeline import Pipeline
 X_raw_data = pd.read_csv('../data/binary/X.csv', header=None)
 y_raw_data = pd.read_csv('../data/binary/y.csv', header=None)
 
-#remove the training set 
+#remove the training set
 X_training, X_testing, y_training, y_testing = train_test_split(X_raw_data, y_raw_data, test_size = 0.2, random_state = 78, stratify=y_raw_data)
 
 #initialize the model - Support vector classification
-svc = SVC(decision_function_shape = 'ovo') 
+#shape of one-versus-one compares two classes directly, better for binary
+svc = SVC(decision_function_shape = 'ovo')
 
 #standardize the data
-scaler = preprocessing.StandardScaler().fit(X_training) 
+scaler = preprocessing.StandardScaler().fit(X_training)
 
 #create pipeline & grid
-pipeline = Pipeline([('scaler', scaler), 
+pipeline = Pipeline([('scaler', scaler),
         ('model', svc)])
 
 grid = [{'model__kernel': ['linear'],
-        'model__tol': [1e-3, 1e-4, 1e-5]}] 
+        'model__tol': [1e-3, 1e-4, 1e-5]}]
 
 #Perform Grid Search and Cross Validation
 clf = GridSearchCV(pipeline, param_grid = grid, cv=5, refit = True)
@@ -42,7 +43,7 @@ y_train_prediction = cross_val_predict(clf, X_training, y_training, cv=5)
 #caclulate the score for each training instance, then use it to plot Precision-Recall Curve and Receiver Operating Characteristic
 y_scores = cross_val_predict(clf, X_training, y_training, cv=5, method="decision_function")
 
-#performance evaluation 
+#performance evaluation
 print(confusion_matrix(y_training, y_train_prediction))
 print("Precision is: ")                                 #True Positive / (True Positive + False Positive)
 print(precision_score(y_training, y_train_prediction))
