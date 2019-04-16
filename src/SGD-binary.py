@@ -32,6 +32,7 @@ helpers.visualizeAllRowsOfData(X_training)
 helpers.visualizeAllRowsOfData(X_training_means)
 
 #heatmap
+
 helpers.correlationMatrix(X_means)
 #the heatmap has repeating patterns. some of this has to do with the fact that
 #there are 4 channels, with each channel having 64 components. The 256 mean
@@ -62,13 +63,19 @@ y_train_prediction = cross_val_predict(sgd_clf, x_train, y_training, cv=5)
 y_scores = cross_val_predict(sgd_clf, x_train, y_training, cv=5, method="decision_function")
 
 #performance evaluation
-print(confusion_matrix(y_training, y_train_prediction))
+confusion_matrix = confusion_matrix(y_training, y_train_prediction)
+print(confusion_matrix)
 print("Precision is: ")                                 #True Positive / (True Positive + False Positive)
 print(precision_score(y_training, y_train_prediction))
 print("Recall is: ")                                    #True Positive / (True Positive + False Negative)
 print(recall_score(y_training, y_train_prediction))
 print("F1 Score is: ")                                  #useful for comparing two classifiers
 print(f1_score(y_training, y_train_prediction))
+
+#visualize confusion_matrix
+xlabels=["Actual Y0", "Actual Y1"]
+ylabels=["Predicted Y0", "Predicted Y1"]
+helpers.confusionMatrix(confusion_matrix, xlabels, ylabels)
 
 #results visualization - Precision-Recall Curve - training data
 precisions, recalls, thresholds = precision_recall_curve(y_training, y_scores)

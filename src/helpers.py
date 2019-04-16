@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import seaborn as sns
+import pandas as pd
 
 #method for exploring the data
 def checkDataForNullAndType(X_raw_data, y_raw_data):
@@ -72,8 +73,13 @@ def visualizeStandardDeviation(X):
     plt.title("Standard Deviation of Each Column")
     plt.show()
 
-#heatmap
+#heatmap for correlation matrix
 def correlationMatrix(dataframe):
     corr = dataframe.corr()
     sns.heatmap(corr)
+    plt.show()
+
+#heatmap for confusion matrix
+def confusionMatrix(data, xlabels, ylabels):
+    sns.heatmap(data, annot=True, xticklabels=xlabels, yticklabels=ylabels, fmt='.0f')
     plt.show()

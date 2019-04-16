@@ -29,8 +29,12 @@ X = StandardScaler().fit_transform(X_training)
 #Principal component analysis
 pca = PCA(n_components=2)
 data = pca.fit_transform(X)
+# print("data looks like:")
+# print(data)
 
 principalDf = pd.DataFrame(data = data, columns = ['principal component 1', 'principal component 2'])
+# print("principal DF:")
+# print(principalDf)
 
 X1 = principalDf.iloc[:,0]
 X2 = principalDf.iloc[:,1]
@@ -59,13 +63,13 @@ grid = [{'model__penalty': ['l1', 'l2'],
 clf = GridSearchCV(pipeline, param_grid = grid, cv=5, refit = True)
 
 #train the model
-clf.fit(X_training, y_training)
+clf.fit(data, y_training)
 
 #cross validation - use cross_val_predict to give the actual values
-y_train_prediction = cross_val_predict(clf, X_training, y_training, cv=5)
+y_train_prediction = cross_val_predict(clf, data, y_training, cv=5)
 
 #caclulate the score for each training instance, then use it to plot Precision-Recall Curve and Receiver Operating Characteristic
-y_scores = cross_val_predict(clf, X_training, y_training, cv=5, method="decision_function")
+y_scores = cross_val_predict(clf, data, y_training, cv=5, method="decision_function")
 
 #performance evaluation of training data
 print(confusion_matrix(y_training, y_train_prediction))
