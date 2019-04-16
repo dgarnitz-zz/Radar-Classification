@@ -49,7 +49,7 @@ sgd_clf = SGDClassifier(random_state=45, max_iter=1000, tol=1e-3)
 
 #standardize the data
 scaler = StandardScaler()
-scaler.fit(X_training)  # Don't cheat - fit only on training data
+scaler.fit(X_training)  
 x_train = scaler.transform(X_training)
 X_testing = scaler.transform(X_testing)
 

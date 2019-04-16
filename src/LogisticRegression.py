@@ -5,7 +5,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import cross_val_predict, GridSearchCV
 from sklearn.metrics import precision_score, recall_score, f1_score, confusion_matrix, precision_recall_curve, roc_curve
-from sklearn import preprocessing
+from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.pipeline import Pipeline
 
@@ -32,18 +32,18 @@ helpers.visualizeAllRowsOfData(X_training)
 log_reg = LogisticRegression(solver='liblinear') #good choice for small datasets
 
 #standardize the data
-scaler = preprocessing.StandardScaler().fit(X_training)
+scaler = StandardScaler()
+scaler.fit(X_training)  
+X_training = scaler.transform(X_training)
+X_testing = scaler.transform(X_testing)
 
-#create pipeline & grid
-pipeline = Pipeline([('scaler', scaler),
-        ('model', log_reg)])
-
+#create grid
 grid = {'model__penalty': ('l2', 'l1'),
         'model__tol': (1e-5, 1e-4, 1e-3),
         'model__max_iter': (100, 500, 1000)}
 
 #Perform Grid Search and Cross Validation
-clf = GridSearchCV(pipeline, param_grid = grid, scoring='roc_auc', cv=5, refit = True)
+clf = GridSearchCV(log_reg, param_grid = grid, scoring='roc_auc', cv=5, verbose=1, refit = True)
 
 #train the model
 clf.fit(X_training, y_training)
