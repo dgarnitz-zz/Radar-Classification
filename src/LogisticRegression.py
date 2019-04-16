@@ -17,7 +17,7 @@ y_raw_data = pd.read_csv('../data/binary/y.csv', header=None)
 X_mean = X_raw_data.loc[:,:255] # this takes only the means
 
 #explore the data
-#helpers.checkDataForNullAndType(X_raw_data, y_raw_data)
+helpers.checkDataForNullAndType(X_raw_data, y_raw_data)
 
 #remove the training set
 X_training, X_testing, y_training, y_testing = train_test_split(X_raw_data, y_raw_data, test_size = 0.2, random_state = 78, stratify=y_raw_data)
@@ -65,8 +65,8 @@ print("F1 Score is: ")                                  #useful for comparing tw
 print(f1_score(y_training, y_train_prediction))
 
 #visualize confusion_matrix
-xlabels=["Actual Y0", "Actual Y1"]
-ylabels=["Predicted Y0", "Predicted Y1"]
+xlabels=["book", "plastic case"]
+ylabels=["book", "plastic case"]
 helpers.confusionMatrix(confusion_matrix, xlabels, ylabels)
 
 #results visualization - Precision-Recall Curve - training data

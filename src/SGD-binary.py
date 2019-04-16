@@ -73,8 +73,8 @@ print("F1 Score is: ")                                  #useful for comparing tw
 print(f1_score(y_training, y_train_prediction))
 
 #visualize confusion_matrix
-xlabels=["Actual Y0", "Actual Y1"]
-ylabels=["Predicted Y0", "Predicted Y1"]
+xlabels=["book", "plastic case"]
+ylabels=["book", "plastic case"]
 helpers.confusionMatrix(confusion_matrix, xlabels, ylabels)
 
 #results visualization - Precision-Recall Curve - training data

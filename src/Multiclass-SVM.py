@@ -61,8 +61,12 @@ y_train_prediction = cross_val_predict(clf, X_training, y_training, cv=5)
 #calculate the score for each training instance, then use it to plot Precision-Recall Curve and Receiver Operating Characteristic
 y_scores = cross_val_predict(clf, X_training, y_training, cv=5, method="decision_function")
 
-#confusion matrix
-print(confusion_matrix(y_training, y_train_prediction))
+#confusion matrix and visualization
+confusion_matrix = confusion_matrix(y_training, y_train_prediction)
+print(confusion_matrix)
+xlabels=["air", "book", "hand", "knife", "plastic case"]
+ylabels=["air", "book", "hand", "knife", "plastic case"]
+helpers.confusionMatrix(confusion_matrix, xlabels, ylabels)
 
 #performance evaluation of training data - per class
 print("Precision is: ")                                 #True Positive / (True Positive + False Positive)

@@ -46,8 +46,12 @@ clf.fit(X_training, y_training)
 #cross validation - use cross_val_predict to give the actual values
 y_train_prediction = cross_val_predict(clf, X_training, y_training, cv=5)
 
-#confusion matrix
-print(confusion_matrix(y_training, y_train_prediction)) 
+#confusion matrix and visualization
+confusion_matrix = confusion_matrix(y_training, y_train_prediction)
+print(confusion_matrix)
+xlabels=["air", "book", "hand", "knife", "plastic case"]
+ylabels=["air", "book", "hand", "knife", "plastic case"]
+helpers.confusionMatrix(confusion_matrix, xlabels, ylabels)
 
 #performance evaluation of training data - per class
 print("Precision is: ")                                 #True Positive / (True Positive + False Positive)
