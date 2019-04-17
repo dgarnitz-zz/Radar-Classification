@@ -83,3 +83,12 @@ def correlationMatrix(dataframe):
 def confusionMatrix(data, xlabels, ylabels):
     sns.heatmap(data, annot=True, xticklabels=xlabels, yticklabels=ylabels, fmt='.0f')
     plt.show()
+
+#histogram for y values
+def histogram(y, bins, title):
+    print(y.values)
+    n, bins, patches = plt.hist(y.values, bins=bins, density = 0, facecolor = 'blue', alpha = .2)
+    plt.title(title)
+    plt.xlabel('Grouping of Y Values')
+    plt.ylabel('Frequency')
+    plt.show()

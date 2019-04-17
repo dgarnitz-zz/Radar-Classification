@@ -27,6 +27,7 @@ helpers.visualizeOneRowOfData(X_training)
 helpers.visualizeOneRowOfData(X_mean)
 helpers.visualizeStandardDeviation(X_training)
 helpers.visualizeAllRowsOfData(X_training)
+helpers.histogram(y_training, 3, 'Histogram of Y Values For Binary Classification, With 2 Bins')
 
 #initialize the model
 log_reg = LogisticRegression(solver='liblinear') #good choice for small datasets
