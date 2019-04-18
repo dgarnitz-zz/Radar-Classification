@@ -81,7 +81,8 @@ print(f1_score(y_testing, y_train_prediction))
 #visualize confusion_matrix
 xlabels=["book", "plastic case"]
 ylabels=["book", "plastic case"]
-helpers.confusionMatrix(confusion_matrix, xlabels, ylabels)
+title = "Logistic Regression Confusion Matrix"
+helpers.confusionMatrix(confusion_matrix, xlabels, ylabels, title)
 
 #results visualization - Precision-Recall Curve - training data
 precisions, recalls, thresholds = precision_recall_curve(y_testing, y_scores)

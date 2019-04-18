@@ -32,8 +32,8 @@ helpers.visualizeAllRowsOfData(X_training)
 helpers.visualizeAllRowsOfData(X_training_means)
 
 #heatmap
-
-helpers.correlationMatrix(X_means)
+helpers.correlationMatrix(X_training, "Heatmap of X Training Data")
+helpers.correlationMatrix(X_training_means, "Heatmap of X Means Training Data")
 #the heatmap has repeating patterns. some of this has to do with the fact that
 #there are 4 channels, with each channel having 64 components. The 256 mean
 #values can therefore be divided into 4 groups of 64. Thus in each of the 4 large
@@ -75,7 +75,8 @@ print(f1_score(y_testing, y_train_prediction))
 #visualize confusion_matrix
 xlabels=["book", "plastic case"]
 ylabels=["book", "plastic case"]
-helpers.confusionMatrix(confusion_matrix, xlabels, ylabels)
+title = "SGD Binary Classification Confusion Matrix"
+helpers.confusionMatrix(confusion_matrix, xlabels, ylabels, title)
 
 #results visualization - Precision-Recall Curve - training data
 precisions, recalls, thresholds = precision_recall_curve(y_testing, y_scores)

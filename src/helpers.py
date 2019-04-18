@@ -74,19 +74,20 @@ def visualizeStandardDeviation(X):
     plt.show()
 
 #heatmap for correlation matrix
-def correlationMatrix(dataframe):
+def correlationMatrix(dataframe, title):
     corr = dataframe.corr()
     sns.heatmap(corr)
+    plt.title(title)
     plt.show()
 
 #heatmap for confusion matrix
-def confusionMatrix(data, xlabels, ylabels):
+def confusionMatrix(data, xlabels, ylabels, title):
     sns.heatmap(data, annot=True, xticklabels=xlabels, yticklabels=ylabels, fmt='.0f')
+    plt.title(title)
     plt.show()
 
 #histogram for y values
 def histogram(y, bins, title):
-    print(y.values)
     n, bins, patches = plt.hist(y.values, bins=bins, density = 0, facecolor = 'blue', alpha = .2)
     plt.title(title)
     plt.xlabel('Grouping of Y Values')

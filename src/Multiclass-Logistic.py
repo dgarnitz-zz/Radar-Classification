@@ -67,7 +67,8 @@ confusion_matrix = confusion_matrix(y_testing, y_train_prediction)
 print(confusion_matrix)
 xlabels=["air", "book", "hand", "knife", "plastic case"]
 ylabels=["air", "book", "hand", "knife", "plastic case"]
-helpers.confusionMatrix(confusion_matrix, xlabels, ylabels)
+title = "Multiclass SVM Confusion Matrix"
+helpers.confusionMatrix(confusion_matrix, xlabels, ylabels, title)
 
 #performance evaluation of training data - overall
 #micro is better if there is a class imbalance

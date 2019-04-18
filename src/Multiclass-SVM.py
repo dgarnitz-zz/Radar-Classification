@@ -37,8 +37,9 @@ helpers.visualizeAllRowsOfData(X_training_visualize)
 helpers.histogram(y_training, 7, 'Histogram of Y Values For Binary Classification, With 6 Bins')
 
 #heatmap
-# helpers.correlationMatrix(X_means)
-#
+helpers.correlationMatrix(X_training_means, "Heatmap of Multiclass X Means Training Data")
+helpers.correlationMatrix(X_training, "Heatmap of Multiclass X Training Data")
+
 # #initialize the model
 # svm = LinearSVC(penalty='l2', loss='hinge', multi_class='ovr')
 # #ovr is one versus all. l2 is considered standard for SVC. hinge is the standard SVM loss

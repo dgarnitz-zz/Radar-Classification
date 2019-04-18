@@ -71,7 +71,8 @@ print(f1_score(y_testing, y_train_prediction))
 #visualize confusion_matrix
 xlabels=["book", "plastic case"]
 ylabels=["book", "plastic case"]
-helpers.confusionMatrix(confusion_matrix, xlabels, ylabels)
+title = "SVM Confusion Matrix"
+helpers.confusionMatrix(confusion_matrix, xlabels, ylabels, title)
 
 #results visualization - Precision-Recall Curve
 precisions, recalls, thresholds = precision_recall_curve(y_testing, y_scores)
