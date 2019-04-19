@@ -6,7 +6,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.model_selection import cross_val_predict, GridSearchCV
 from sklearn.metrics import precision_score, recall_score, f1_score, confusion_matrix, precision_recall_curve, roc_curve
 from sklearn import preprocessing
-from sklearn.preprocessing import PolynomialFeatures
+from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import Pipeline
 
 #load data
@@ -48,8 +48,20 @@ helpers.confusionMatrix(confusion_matrix, xlabels, ylabels, title)
 #performance evaluation of training data - overall
 #micro is better if there is a class imbalance
 print("Precision is: ")                                 #True Positive / (True Positive + False Positive)
-print(precision_score(y_testing, y_train_prediction, average='micro'))
+print(precision_score(y_testing, y_train_prediction, average='macro'))
 print("Recall is: ")                                    #True Positive / (True Positive + False Negative)
-print(recall_score(y_testing, y_train_prediction, average='micro'))
+print(recall_score(y_testing, y_train_prediction, average='macro'))
 print("F1 Score is: ")                                  #useful for comparing two classifiers
-print(f1_score(y_testing, y_train_prediction, average='micro'))
+print(f1_score(y_testing, y_train_prediction, average='macro'))
+
+#write the unclassified data to a file
+X_to_classify = pd.read_csv('../data/multiclass/XToClassify.csv', header=None)
+scaler = StandardScaler()
+scaler.fit(X_to_classify)
+X_to_classify = scaler.transform(X_to_classify)
+y_prediction = clf.predict(X_to_classify)
+y_prediction_string = np.array2string(y_prediction)
+print(y_prediction_string)
+text_file = open("PredictedClasses.csv", "a")
+text_file.write(y_prediction_string)
+text_file.close()

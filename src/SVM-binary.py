@@ -6,7 +6,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.model_selection import cross_val_predict, GridSearchCV
 from sklearn.metrics import precision_score, recall_score, f1_score, confusion_matrix, precision_recall_curve, roc_curve
 from sklearn import preprocessing
-from sklearn.preprocessing import PolynomialFeatures
+from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import Pipeline
 
 
@@ -39,7 +39,7 @@ clf.fit(X_training, y_training)
 #cross validation - use cross_val_predict to give the actual values
 y_train_prediction = cross_val_predict(clf, X_testing, y_testing, cv=5)
 
-#caclulate the score for each training instance, then use it to plot Precision-Recall Curve and Receiver Operating Characteristic
+#calculate the score for each training instance, then use it to plot Precision-Recall Curve and Receiver Operating Characteristic
 y_scores = cross_val_predict(clf, X_testing, y_testing, cv=5, method="decision_function")
 
 #performance evaluation
@@ -66,3 +66,14 @@ helpers.plot_precision_recall_vs_threshold(precisions, recalls, thresholds)
 #results visualization - Receiver Operating Characteristic
 fpr, tpr, thresholds = roc_curve(y_testing, y_scores)
 helpers.plot_roc_curve(fpr, tpr)
+
+#write the unclassified data to a file
+X_to_classify = pd.read_csv('../data/binary/XToClassify.csv', header=None)
+scaler = StandardScaler()
+scaler.fit(X_to_classify)
+X_to_classify = scaler.transform(X_to_classify)
+y_prediction = clf.predict(X_to_classify)
+y_prediction_string = np.array2string(y_prediction)
+text_file = open("PredictedClasses.csv", "a")
+text_file.write(y_prediction_string)
+text_file.close()
