@@ -25,20 +25,8 @@ X_training, X_testing, y_training, y_testing = train_test_split(X_raw_data, y_ra
 #create a training and testing dataset from the mean values
 X_training_means, X_testing_means, y_training_means, y_testing_means = train_test_split(X_means, y_raw_data, test_size = 0.2, random_state = 78, stratify=y_raw_data)
 
-#visualize the data
-helpers.visualizeOneRowOfData(X_training)
-helpers.visualizeOneRowOfData(X_training_means)
-helpers.visualizeStandardDeviation(X_training)
-#helpers.visualizeAllRowsOfData(X_training)
-#helpers.visualizeAllRowsOfData(X_training_means)
-
-#heatmap
-helpers.correlationMatrix(X_means)
-
 #initialize the model
 log_reg = LogisticRegression(penalty='l2', multi_class='multinomial', solver='newton-cg')
-#multinomial performs multiclass. Can use one of three solvers, all of which
-#require 'l2' regularization, default is newton-cg
 
 #standardize the data
 scaler = preprocessing.StandardScaler().fit(X_training)
@@ -47,7 +35,7 @@ scaler = preprocessing.StandardScaler().fit(X_training)
 pipeline = Pipeline([('scaler', scaler),
         ('model', log_reg)])
 
-grid = [{'model__tol': [1e-3, 1e-4, 1e-5],
+grid = [{'model__tol': [1e-5],
         'model__max_iter': [1000]}]
 
 #Perform Grid Search and Cross Validation
@@ -67,24 +55,14 @@ confusion_matrix = confusion_matrix(y_testing, y_train_prediction)
 print(confusion_matrix)
 xlabels=["air", "book", "hand", "knife", "plastic case"]
 ylabels=["air", "book", "hand", "knife", "plastic case"]
-title = "Multiclass SVM Confusion Matrix"
+title = "Multiclass LogisticRegression Confusion Matrix"
 helpers.confusionMatrix(confusion_matrix, xlabels, ylabels, title)
 
 #performance evaluation of training data - overall
 #micro is better if there is a class imbalance
 print("Precision is: ")                                 #True Positive / (True Positive + False Positive)
-print(precision_score(y_testing, y_train_prediction, average='micro'))
+print(precision_score(y_testing, y_train_prediction, average='macro'))
 print("Recall is: ")                                    #True Positive / (True Positive + False Negative)
-print(recall_score(y_testing, y_train_prediction, average='micro'))
+print(recall_score(y_testing, y_train_prediction, average='macro'))
 print("F1 Score is: ")                                  #useful for comparing two classifiers
-print(f1_score(y_testing, y_train_prediction, average='micro'))
-
-#results visualization - Precision-Recall Curve - training data
-#need one hot encoding for these to work, multiclass is not supported --> label_binarize
-#precisions, recalls, thresholds = precision_recall_curve(y_testing, y_scores)
-# helpers.plot_precision_recall_curve(precisions, recalls)
-# helpers.plot_precision_recall_vs_threshold(precisions, recalls, thresholds)
-
-#results visualization - Receiver Operating Characteristic - training data
-# fpr, tpr, thresholds = roc_curve(y_testing, y_scores)
-# helpers.plot_roc_curve(fpr, tpr)
+print(f1_score(y_testing, y_train_prediction, average='macro'))

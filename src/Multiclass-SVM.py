@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 import helpers
-from sklearn.svm import LinearSVC
+from sklearn.svm import SVC
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import cross_val_predict, GridSearchCV
 from sklearn.metrics import precision_score, recall_score, f1_score, confusion_matrix, precision_recall_curve, roc_curve
@@ -40,44 +40,42 @@ helpers.histogram(y_training, 7, 'Histogram of Y Values For Binary Classificatio
 helpers.correlationMatrix(X_training_means, "Heatmap of Multiclass X Means Training Data")
 helpers.correlationMatrix(X_training, "Heatmap of Multiclass X Training Data")
 
-# #initialize the model
-# svm = LinearSVC(penalty='l2', loss='hinge', multi_class='ovr')
-# #ovr is one versus all. l2 is considered standard for SVC. hinge is the standard SVM loss
-#
-# #standardize the data
-# scaler = preprocessing.StandardScaler().fit(X_training)
-#
-# #create pipeline & grid
-# pipeline = Pipeline([('scaler', scaler),
-#         ('model', svm)])
-#
-# grid = [{'model__tol': [1e-3, 1e-4, 1e-5],
-#         'model__max_iter': [1000]}]
-#
-# #Perform Grid Search and Cross Validation
-# clf = GridSearchCV(pipeline, param_grid = grid, cv=5, refit = True)
-#
-# #train the model
-# clf.fit(X_training, y_training)
-#
-# #cross validation - use cross_val_predict to give the actual values
-# y_train_prediction = cross_val_predict(clf, X_testing, y_testing, cv=5)
-#
-# #calculate the score for each training instance, then use it to plot Precision-Recall Curve and Receiver Operating Characteristic
-# y_scores = cross_val_predict(clf, X_testing, y_testing, cv=5, method="decision_function")
-#
-# #confusion matrix and visualization
-# confusion_matrix = confusion_matrix(y_testing, y_train_prediction)
-# print(confusion_matrix)
-# xlabels=["air", "book", "hand", "knife", "plastic case"]
-# ylabels=["air", "book", "hand", "knife", "plastic case"]
-# helpers.confusionMatrix(confusion_matrix, xlabels, ylabels)
-#
-# #performance evaluation of training data - per class
-# #micro is better if there is a class imbalance
-# print("Precision is: ")                                 #True Positive / (True Positive + False Positive)
-# print(precision_score(y_testing, y_train_prediction, average='micro'))
-# print("Recall is: ")                                    #True Positive / (True Positive + False Negative)
-# print(recall_score(y_testing, y_train_prediction, average='micro'))
-# print("F1 Score is: ")                                  #useful for comparing two classifiers
-# print(f1_score(y_testing, y_train_prediction, average='micro'))
+#initialize the model
+svm = SVC(kernel = 'rbf')
+
+#standardize the data
+scaler = preprocessing.StandardScaler().fit(X_training)
+
+#create pipeline & grid
+pipeline = Pipeline([('scaler', scaler),
+        ('model', svm)])
+
+grid = [{'model__tol': [1e-5],
+        'model__max_iter': [1000]}]
+
+#Perform Grid Search and Cross Validation
+clf = GridSearchCV(pipeline, param_grid = grid, cv=5, refit = True)
+
+#train the model
+clf.fit(X_training, y_training)
+
+#cross validation - use cross_val_predict to give the actual values
+y_train_prediction = cross_val_predict(clf, X_testing, y_testing, cv=5)
+
+#calculate the score for each training instance, then use it to plot Precision-Recall Curve and Receiver Operating Characteristic
+y_scores = cross_val_predict(clf, X_testing, y_testing, cv=5, method="decision_function")
+
+#confusion matrix and visualization
+confusion_matrix = confusion_matrix(y_testing, y_train_prediction)
+print(confusion_matrix)
+xlabels=["air", "book", "hand", "knife", "plastic case"]
+ylabels=["air", "book", "hand", "knife", "plastic case"]
+helpers.confusionMatrix(confusion_matrix, xlabels, ylabels, "Multiclass SVM Confusion Matrix")
+
+#performance evaluation of training data - per class
+print("Precision is: ")                                 #True Positive / (True Positive + False Positive)
+print(precision_score(y_testing, y_train_prediction, average='macro'))
+print("Recall is: ")                                    #True Positive / (True Positive + False Negative)
+print(recall_score(y_testing, y_train_prediction, average='macro'))
+print("F1 Score is: ")                                  #useful for comparing two classifiers
+print(f1_score(y_testing, y_train_prediction, average='macro'))

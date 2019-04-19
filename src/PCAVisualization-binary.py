@@ -8,8 +8,6 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import cross_val_predict, GridSearchCV
 from sklearn.metrics import precision_score, recall_score, f1_score, confusion_matrix, precision_recall_curve, roc_curve
-from sklearn import preprocessing
-from sklearn.preprocessing import PolynomialFeatures
 from sklearn.pipeline import Pipeline
 
 #load data
@@ -20,7 +18,7 @@ y_raw_data = pd.read_csv('../data/binary/y.csv', header=None)
 X_training, X_testing, y_training, y_testing = train_test_split(X_raw_data, y_raw_data, test_size = 0.2, random_state = 78, stratify=y_raw_data)
 
 #sort the data
-X_training.sort_index()
+X_training = X_training.sort_index()
 y_training = y_training.sort_index()
 
 #standardize the data
@@ -29,20 +27,19 @@ X = StandardScaler().fit_transform(X_training)
 #Principal component analysis
 pca = PCA(n_components=2)
 data = pca.fit_transform(X)
-# print("data looks like:")
-# print(data)
 
 principalDf = pd.DataFrame(data = data, columns = ['principal component 1', 'principal component 2'])
-# print("principal DF:")
-# print(principalDf)
 
-X1 = principalDf.iloc[:,0]
-X2 = principalDf.iloc[:,1]
+X1_y0 = principalDf.iloc[0:32,0]
+X2_y0 = principalDf.iloc[0:32,1]
+X1_y1 = principalDf.iloc[32:64,0]
+X2_y1 = principalDf.iloc[32:64,1]
 
-plt.scatter(X1, X2)
+plt.scatter(X1_y0, X2_y0, color='green')
+plt.scatter(X1_y1, X2_y1, color='blue')
 plt.xlabel('X1')
 plt.ylabel('X2')
-plt.title("Principal Component Analysis - Two Features")
+plt.title("Principal Component Analysis - Two Features - Binary Data")
 plt.show()
 
 ##############################################################################

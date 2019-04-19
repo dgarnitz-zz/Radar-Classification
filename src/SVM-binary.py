@@ -18,7 +18,6 @@ y_raw_data = pd.read_csv('../data/binary/y.csv', header=None)
 X_training, X_testing, y_training, y_testing = train_test_split(X_raw_data, y_raw_data, test_size = 0.2, random_state = 78, stratify=y_raw_data)
 
 #initialize the model - Support vector classification
-#shape of one-versus-one compares two classes directly, better for binary
 svc = SVC()
 
 #standardize the data
@@ -28,11 +27,8 @@ scaler = preprocessing.StandardScaler().fit(X_training)
 pipeline = Pipeline([('scaler', scaler),
         ('model', svc)])
 
-grid = [{ 'model__C': [0.1, 0.5, 1],
-        'model__kernel': ['linear', 'poly'],
-        'model__degree': [1, 2, 3],
-        'model__tol': [1e-3, 1e-4, 1e-5],
-        'model__decision_function_shape': ['ovo', 'ovr']}]
+grid = [{'model__kernel': ['linear'],
+        'model__tol': [1e-5]}]
 
 #Perform Grid Search and Cross Validation
 clf = GridSearchCV(pipeline, param_grid = grid, cv=5, refit = True)
@@ -45,18 +41,6 @@ y_train_prediction = cross_val_predict(clf, X_testing, y_testing, cv=5)
 
 #caclulate the score for each training instance, then use it to plot Precision-Recall Curve and Receiver Operating Characteristic
 y_scores = cross_val_predict(clf, X_testing, y_testing, cv=5, method="decision_function")
-
-#print the best parameters
-# print("best parameters:")
-# print(clf.get_params())
-
-#cross validation results
-# print("cross validation results:")
-# print(clf.cv_results_)
-
-#best parameters
-# print("best parameters")
-# print(clf.best_params_)
 
 #performance evaluation
 confusion_matrix = confusion_matrix(y_testing, y_train_prediction)

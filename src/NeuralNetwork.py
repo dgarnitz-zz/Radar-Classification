@@ -17,15 +17,7 @@ y_raw_data = pd.read_csv('../data/multiclass/y.csv', header=None)
 X_training, X_testing, y_training, y_testing = train_test_split(X_raw_data, y_raw_data, test_size = 0.2, random_state = 78, stratify=y_raw_data)
 
 #initialize the model
-mlp = MLPClassifier(hidden_layer_sizes=(80,),solver='sgd')
-#sgd solver means stochasic gradient descent optimization strategy
-#if you pass the model multiclass data, it will automatically use a softmax activation function
-
-#its rare to need more than 2 layers, how you pick the layes is based on how complex a function you want to represent
-#one hidden layer is sufficient for a problem as this where the dataset is small
-#number of neurons in hidden layer should be between size of the input and size of the output
-#use too few neurons and it underfits, too many and it overfits
-#--https://www.heatonresearch.com/2017/06/01/hidden-layers.html
+mlp = MLPClassifier(hidden_layer_sizes=(500,), solver='sgd')
 
 #standardize the data
 scaler = preprocessing.StandardScaler().fit(X_training)
@@ -34,8 +26,7 @@ scaler = preprocessing.StandardScaler().fit(X_training)
 pipeline = Pipeline([('scaler', scaler),
         ('model', mlp)])
 
-grid = [{'model__hidden_layer_sizes': [(500,)],
-        'model__max_iter': [1000]}]
+grid = [{'model__max_iter': [1000]}]
 
 #Perform Grid Search and Cross Validation
 clf = GridSearchCV(pipeline, param_grid = grid, cv=5, refit = True)
